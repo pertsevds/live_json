@@ -1,6 +1,6 @@
 {
   "name": "live_json",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "LiveJSON - LiveView for JSON Objects",
   "license": "MIT",
   "private": true,

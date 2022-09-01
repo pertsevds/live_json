@@ -6,7 +6,7 @@ function dispatchGlobalEvent(eventName) {
   let event
 
   if (typeof window.CustomEvent === 'function') {
-    event = new window.CustomEvent(eventName, { })
+    event = new window.CustomEvent(eventName, {})
   } else {
     event = document.createEvent('Event')
     event.initEvent(eventName, false, true)
@@ -19,68 +19,68 @@ export function createLiveJsonHooks() {
     LiveJSON: {
       mounted() {
 
-          /*
-          Patch and Track
-          */
-        
-          this.handleEvent("lj:patch", ({doc_name, patch, method}) => {       
-            if(method == "rfc"){
-              window[doc_name] = jsonpatch.applyPatch(window[doc_name], patch).newDocument;
-            } else {
-              window[doc_name] = jsondiffpatch.patch(window[doc_name], patch);
-            }
+        /*
+        Patch and Track
+        */
 
-            dispatchGlobalEvent(doc_name + "_patched");
-          });
+        this.handleEvent("lj:patch", ({ doc_name, patch, method }) => {
+          if (method == "rfc") {
+            window[doc_name] = jsonpatch.applyPatch(window[doc_name], patch).newDocument;
+          } else {
+            window[doc_name] = jsondiffpatch.patch(window[doc_name], patch);
+          }
 
-          this.handleEvent("lj:init", ({doc_name, data}) => {
-            window[doc_name] = data;
-            dispatchGlobalEvent(doc_name + "_initialized");
-          });
+          dispatchGlobalEvent(doc_name + "_patched");
+        });
 
-          /*
-          Local Utilities
-          */
+        this.handleEvent("lj:init", ({ doc_name, data }) => {
+          window[doc_name] = data;
+          dispatchGlobalEvent(doc_name + "_initialized");
+        });
 
-          this.handleEvent("lj:assign", ({doc_name, data}) => {
-            window[doc_name] = data;
-            dispatchGlobalEvent(doc_name + "_assigned");
-          });
+        /*
+        Local Utilities
+        */
 
-          this.handleEvent("lj:append", ({doc_name, data}) => {
-            if(!(doc_name in window)){
-              window[doc_name] = [];
-            }
-            window[doc_name].push(data);
-            dispatchGlobalEvent(doc_name + "_appended");
-          });
+        this.handleEvent("lj:assign", ({ doc_name, data }) => {
+          window[doc_name] = data;
+          dispatchGlobalEvent(doc_name + "_assigned");
+        });
 
-          this.handleEvent("lj:put", ({doc_name, key, value}) => {
-            if(!(doc_name in window)){
-              window[doc_name] = {};
-            }
-            window[doc_name].set(key, value);
-            dispatchGlobalEvent(doc_name + "_put");
-          });
+        this.handleEvent("lj:append", ({ doc_name, data }) => {
+          if (!(doc_name in window)) {
+            window[doc_name] = [];
+          }
+          window[doc_name].push(data);
+          dispatchGlobalEvent(doc_name + "_appended");
+        });
 
-          /*
-          Remote Utilities
-          */
-          this.el.addEventListener("send_data", e => {
-            this.pushEvent(e.detail.name, e.detail.data);
-            dispatchGlobalEvent("data_sent");
-            dispatchGlobalEvent(e.detail.name + "_sent");
-          });
+        this.handleEvent("lj:put", ({ doc_name, key, value }) => {
+          if (!(doc_name in window)) {
+            window[doc_name] = {};
+          }
+          window[doc_name].set(key, value);
+          dispatchGlobalEvent(doc_name + "_put");
+        });
+
+        /*
+        Remote Utilities
+        */
+        this.el.addEventListener("send_data", e => {
+          this.pushEvent(e.detail.name, e.detail.data);
+          dispatchGlobalEvent("data_sent");
+          dispatchGlobalEvent(e.detail.name + "_sent");
+        });
 
       }
     },
   };
 };
 
-export function sendData(handler_name, data_to_send, elid = "lj"){
+export function sendData(handler_name, data_to_send, elid = "lj") {
   const ljEvent = new CustomEvent('send_data', {
     bubbles: true,
-    detail: { 
+    detail: {
       name: handler_name,
       data: data_to_send,
     }
