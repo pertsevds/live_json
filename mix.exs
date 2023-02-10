@@ -1,7 +1,7 @@
 defmodule LiveJson.MixProject do
   use Mix.Project
 
-  @version "0.4.4"
+  @version "0.4.5"
 
   def project do
     [
@@ -31,13 +31,13 @@ defmodule LiveJson.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, "~> 1.6.0"},
+      {:phoenix, "~> 1.7.0-rc.2", override: true},
       {:phoenix_html, "~> 3.1"},
-      {:phoenix_live_view, ">= 0.16.0", allow_pre: true},
-      {:jsonpatch, "~> 0.13.1"},
-      {:json_diff_ex, "~> 0.5.0"},
-      {:jason, "~> 1.3.0", optional: true},
-      {:esbuild, "~> 0.2", only: :dev},
+      {:phoenix_live_view, "~> 0.18.3"},
+      {:jsonpatch, "~> 1.0.1"},
+      {:json_diff_ex, "~> 0.6.0"},
+      {:jason, "~> 1.2", optional: true},
+      {:esbuild, "~> 0.5", only: :dev},
       {:telemetry, "~> 0.4.2 or ~> 1.0"},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
